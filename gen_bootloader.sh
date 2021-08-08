@@ -12,6 +12,9 @@ set_bootloader() {
 		grub2)
 			set_bootloader_grub2
 			;;
+		efi)
+			set_bootloader_efi
+			;;
 		no)
 			print_info 1 "--no-bootloader set; Skipping bootloader update ..."
 			;;
@@ -29,6 +32,18 @@ set_bootloader_read_fstab() {
 	[ -z "${BOOTFS}" ] && BOOTFS=${ROOTFS}
 
 	echo "${ROOTFS} ${BOOTFS}"
+}
+
+set_bootloader_efi() {
+       local BOOTDISK=$(mount |grep "${BOOTDIR} "|awk '{print $1}'|sed 's/p\?[0-9]\+$//')
+       if [ -b "$BOOTDISK" ]; then
+               print_info 1 "Detected '${BOOTDISK}' as device with boot partition (${BOOTDIR})"
+               print_info 1 "Adding EFI entry: efibootmgr -c -L '${KV}' -l '\\${GK_FILENAME_KERNEL}' -d ${BOOTDISK}"
+               efibootmgr -q -c -L "${KV}" -l "\\${GK_FILENAME_KERNEL}" -d "${BOOTDISK}"
+       else
+               print_error 1 "Failed to detect disk with ${BOOTDIR}"
+               return 0
+       fi
 }
 
 set_bootloader_grub2() {

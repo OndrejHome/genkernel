@@ -762,10 +762,10 @@ determine_real_args() {
 	fi
 
 	case "${BOOTLOADER}" in
-		no|grub|grub2)
+		no|grub|grub2|efi)
 			;;
 		*)
-			gen_die "Invalid bootloader '${BOOTLOADER}'; --bootloader=<bootloader> requires one of: no, grub, grub2"
+			gen_die "Invalid bootloader '${BOOTLOADER}'; --bootloader=<bootloader> requires one of: no, grub, grub2, efi"
 			;;
 	esac
 
