@@ -353,19 +353,20 @@ determine_real_args() {
 	set_config_with_override STRING CHOST                                 CMD_CHOST                                 "${DEFAULT_CHOST}"
 	set_config_with_override STRING MAKEOPTS                              CMD_MAKEOPTS                              "${DEFAULT_MAKEOPTS}"
 	set_config_with_override STRING NICE                                  CMD_NICE                                  "10"
-	set_config_with_override STRING KERNEL_AS                             CMD_KERNEL_AS                             "${DEFAULT_KERNEL_AS}"
-	set_config_with_override STRING KERNEL_AR                             CMD_KERNEL_AR                             "${DEFAULT_KERNEL_AR}"
-	set_config_with_override STRING KERNEL_CC                             CMD_KERNEL_CC                             "${DEFAULT_KERNEL_CC}"
-	set_config_with_override STRING KERNEL_CFLAGS                         CMD_KERNEL_CFLAGS                         "${DEFAULT_KERNEL_CFLAGS}"
+	set_config_with_override STRING KERNEL_CROSS_COMPILE                  CMD_KERNEL_CROSS_COMPILE
+	set_config_with_override STRING KERNEL_AS                             CMD_KERNEL_AS                             "$([[ -n "${KERNEL_CROSS_COMPILE}" ]] && echo "${KERNEL_CROSS_COMPILE}-${DEFAULT_KERNEL_AS}" || echo "${DEFAULT_KERNEL_AS}")"
+	set_config_with_override STRING KERNEL_AR                             CMD_KERNEL_AR                             "$([[ -n "${KERNEL_CROSS_COMPILE}" ]] && echo "${KERNEL_CROSS_COMPILE}-${DEFAULT_KERNEL_AR}" || echo "${DEFAULT_KERNEL_AR}")"
+	set_config_with_override STRING KERNEL_CC                             CMD_KERNEL_CC                             "$([[ -n "${KERNEL_CROSS_COMPILE}" ]] && echo "${KERNEL_CROSS_COMPILE}-${DEFAULT_KERNEL_CC}" || echo "${DEFAULT_KERNEL_CC}")"
 	set_config_with_override STRING KERNEL_CXX                            CMD_KERNEL_CXX                            "${DEFAULT_KERNEL_CXX}"
-	set_config_with_override STRING KERNEL_LD                             CMD_KERNEL_LD                             "${DEFAULT_KERNEL_LD}"
-	set_config_with_override STRING KERNEL_NM                             CMD_KERNEL_NM                             "${DEFAULT_KERNEL_NM}"
+	set_config_with_override STRING KERNEL_CFLAGS                         CMD_KERNEL_CFLAGS                         "${DEFAULT_KERNEL_CFLAGS}"
+	set_config_with_override STRING KERNEL_LD                             CMD_KERNEL_LD                             "$([[ -n "${KERNEL_CROSS_COMPILE}" ]] && echo "${KERNEL_CROSS_COMPILE}-${DEFAULT_KERNEL_LD}" || echo "${DEFAULT_KERNEL_LD}")"
 	set_config_with_override STRING KERNEL_MAKE                           CMD_KERNEL_MAKE                           "${DEFAULT_KERNEL_MAKE}"
-	set_config_with_override STRING KERNEL_OBJCOPY                        CMD_KERNEL_OBJCOPY                        "${DEFAULT_KERNEL_OBJCOPY}"
-	set_config_with_override STRING KERNEL_OBJDUMP                        CMD_KERNEL_OBJDUMP                        "${DEFAULT_KERNEL_OBJDUMP}"
-	set_config_with_override STRING KERNEL_RANLIB                         CMD_KERNEL_RANLIB                         "${DEFAULT_KERNEL_RANLIB}"
-	set_config_with_override STRING KERNEL_READELF                        CMD_KERNEL_READELF                        "${DEFAULT_KERNEL_READELF}"
-	set_config_with_override STRING KERNEL_STRIP                          CMD_KERNEL_STRIP                          "${DEFAULT_KERNEL_STRIP}"
+	set_config_with_override STRING KERNEL_NM                             CMD_KERNEL_NM                             "$([[ -n "${KERNEL_CROSS_COMPILE}" ]] && echo "${KERNEL_CROSS_COMPILE}-${DEFAULT_KERNEL_NM}" || echo "${DEFAULT_KERNEL_NM}")"
+	set_config_with_override STRING KERNEL_OBJCOPY                        CMD_KERNEL_OBJCOPY                        "$([[ -n "${KERNEL_CROSS_COMPILE}" ]] && echo "${KERNEL_CROSS_COMPILE}-${DEFAULT_KERNEL_OBJCOPY}" || echo "${DEFAULT_KERNEL_OBJCOPY}")"
+	set_config_with_override STRING KERNEL_OBJDUMP                        CMD_KERNEL_OBJDUMP                        "$([[ -n "${KERNEL_CROSS_COMPILE}" ]] && echo "${KERNEL_CROSS_COMPILE}-${DEFAULT_KERNEL_OBJDUMP}" || echo "${DEFAULT_KERNEL_OBJDUMP}")"
+	set_config_with_override STRING KERNEL_RANLIB                         CMD_KERNEL_RANLIB                         "$([[ -n "${KERNEL_CROSS_COMPILE}" ]] && echo "${KERNEL_CROSS_COMPILE}-${DEFAULT_KERNEL_RANLIB}" || echo "${DEFAULT_KERNEL_RANLIB}")"
+	set_config_with_override STRING KERNEL_READELF                        CMD_KERNEL_READELF                        "$([[ -n "${KERNEL_CROSS_COMPILE}" ]] && echo "${KERNEL_CROSS_COMPILE}-${DEFAULT_KERNEL_READELF}" || echo "${DEFAULT_KERNEL_READELF}")"
+	set_config_with_override STRING KERNEL_STRIP                          CMD_KERNEL_STRIP                          "$([[ -n "${KERNEL_CROSS_COMPILE}" ]] && echo "${KERNEL_CROSS_COMPILE}-${DEFAULT_KERNEL_STRIP}" || echo "${DEFAULT_KERNEL_STRIP}")"
 	set_config_with_override STRING UTILS_AS                              CMD_UTILS_AS                              "${DEFAULT_UTILS_AS}"
 	set_config_with_override STRING UTILS_AR                              CMD_UTILS_AR                              "${DEFAULT_UTILS_AR}"
 	set_config_with_override STRING UTILS_CC                              CMD_UTILS_CC                              "${DEFAULT_UTILS_CC}"
@@ -433,6 +434,7 @@ determine_real_args() {
 	set_config_with_override STRING REAL_ROOT                             CMD_REAL_ROOT
 	set_config_with_override BOOL   LUKS                                  CMD_LUKS                                  "no"
 	set_config_with_override BOOL   GPG                                   CMD_GPG                                   "no"
+	set_config_with_override BOOL   KEYCTL                                CMD_KEYCTL                                "no"
 	set_config_with_override BOOL   MDADM                                 CMD_MDADM                                 "no"
 	set_config_with_override STRING MDADM_CONFIG                          CMD_MDADM_CONFIG
 	set_config_with_override BOOL   E2FSPROGS                             CMD_E2FSPROGS                             "no"
@@ -1099,6 +1101,7 @@ determine_real_args() {
 			FEATURES_REQUIRING_BUSYBOX+=( KEYMAP )
 			FEATURES_REQUIRING_BUSYBOX+=( LVM )
 			FEATURES_REQUIRING_BUSYBOX+=( LUKS )
+			FEATURES_REQUIRING_BUSYBOX+=( KEYCTL )
 			FEATURES_REQUIRING_BUSYBOX+=( MDADM )
 			FEATURES_REQUIRING_BUSYBOX+=( MULTIPATH )
 			FEATURES_REQUIRING_BUSYBOX+=( SPLASH )
