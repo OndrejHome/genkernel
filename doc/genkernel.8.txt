@@ -198,9 +198,7 @@ specified.
 *--*[*no-*]*module-rebuild*::
     Runs, or does not run "emerge --ignore-default-opts --buildpkg=n --usepkg=n --quiet-build=y @module-rebuild"
     to build out-of-tree modules when possible, i.e. when non-static
-    kernel and modules will be build, installed,
-    *--kernel-modules-prefix* is not set, '/var/lib/module-rebuild/moduledb' exists
-    and is not empty.
+    kernel and modules will be build, installed, *--kernel-modules-prefix* is not set.
 
 NOTE: Command can be customized using '--module-rebuild-cmd' command-line
 argument or 'MODULEREBUILD_CMD' in '/etc/genkernel.conf'.

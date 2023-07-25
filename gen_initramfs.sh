@@ -801,7 +801,7 @@ append_multipath() {
 
 	local udevdir=$(get_udevdir)
 	local udevdir_initramfs="/usr/lib/udev"
-	local udev_files=( $(qlist -e sys-fs/multipath-tools:0 \
+	local udev_files=( $(qlist -eC sys-fs/multipath-tools:0 \
 		| grep -E -- "^${udevdir}")
 	)
 
@@ -1131,7 +1131,7 @@ append_zfs() {
 
 	local udevdir=$(get_udevdir)
 	local udevdir_initramfs="/usr/lib/udev"
-	local udev_files=( $(qlist -e sys-fs/zfs:0 \
+	local udev_files=( $(qlist -eC sys-fs/zfs:0 \
 		| grep -E -- "^${udevdir}")
 	)
 
