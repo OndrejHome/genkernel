@@ -10,14 +10,6 @@ src_prepare() {
 		Makefile.flags || gen_die
 
 	sed -i \
-		-e "/^CROSS_COMPILE/s:=.*:= ${CHOST}-:" \
-		-e "/^CC\>/s:=.*:= $(tc-getCC):" \
-		-e "/^HOSTCC/s:=.*:= $(tc-getBUILD_CC):" \
-		-e "/^HOSTCXX/s:=.*:= $(tc-getBUILD_CXX):" \
-		-e "/^PKG_CONFIG\>/s:=.*:= $(tc-getPKG_CONFIG):" \
-		Makefile || gen_die
-
-	sed -i \
 		-e 's:-static-libgcc::' \
 		Makefile.flags || die
 
@@ -28,8 +20,28 @@ src_prepare() {
 		|| die "Failed top copy '${TEMP}/busybox-config' to '${S}/.config.gk_orig'!"
 }
 
+bbmake() {
+	local args=(
+		V=1
+		CROSS_COMPILE="${CHOST}-"
+		AR="${AR}"
+		CC="${CC}"
+		HOSTCC="${BUILD_CC}"
+		HOSTCFLAGS="${BUILD_CFLAGS}"
+		PKG_CONFIG="${PKG_CONFIG}"
+	)
+	make "${args[@]}" "$@"
+}
+
 src_configure() {
-	gkexec "yes '' | ${MAKE} V=1 oldconfig" 1
+	tc-export AR CC BUILD_CC PKG_CONFIG
+	BUILD_CFLAGS=${CFLAGS}
+	BUILD_CFLAGS+=" -D_FILE_OFFSET_BITS=64"
+	gkexec "yes '' | bbmake V=1 oldconfig" 1
+}
+
+src_compile() {
+	gkexec bbmake busybox
 }
 
 src_install() {

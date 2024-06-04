@@ -1773,6 +1773,7 @@ append_firmware() {
 		fwlist=( "${FIRMWARE_FILES[@]}" )
 	else
 		local myfw=
+		local -a myfw_f=()
 		while IFS= read -r -u 3 myfw
 		do
 			if [ -z "${myfw}" ]
@@ -1780,13 +1781,20 @@ append_firmware() {
 				gen_die "modinfo error!"
 			fi
 
-			if [ ! -f "${FIRMWARE_DIR}/${myfw}" ]
+			myfw_f=( $(compgen -G "${FIRMWARE_DIR}/${myfw}*") )
+
+			if [ ${#myfw_f[@]} -gt 1 ]
+			then
+				gen_die "excessive number of firmwares!"
+			fi
+
+			if [ ${#myfw_f[@]} -lt 1 ]
 			then
 				print_warning 3 "$(get_indent 3) - ${myfw} is missing; Ignoring ..."
 				continue
 			fi
 
-			fwlist+=( "${myfw}" )
+			fwlist+=( "${myfw_f#${FIRMWARE_DIR}/}" )
 		done 3< <( (
 			modinfo -b "${KERNEL_MODULES_PREFIX%/}" -k "${KV}" -F firmware $(mod_dep_list) 2>/dev/null || echo
 		) | sort | uniq )
@@ -1797,6 +1805,10 @@ append_firmware() {
 		pushd "${FIRMWARE_DIR}" &>/dev/null || gen_die "Failed to chdir to '${FIRMWARE_DIR}'!"
 		cp -rL --parents --target-directory="${TDIR}/lib/firmware" "${fwlist[@]}" 2>/dev/null \
 			|| gen_die "Failed to copy firmware files to '${TDIR}/lib/firmware'!"
+		popd &>/dev/null || gen_die "Failed to chdir!"
+
+		pushd "${TDIR}/lib/firmware" &>/dev/null || gen_die "Failed to chdir to '${TDIR}/lib/firmware'!"
+		find_and_unpack xz zstd
 		popd &>/dev/null || gen_die "Failed to chdir!"
 	fi
 
@@ -1911,7 +1923,7 @@ append_modules() {
 
 		if [ ! -f "${mymod}" ]
 		then
-			gen_die "Module '${i}${KEXT}' is missing!"
+			gen_die "Module '${mymod}' is missing!"
 		fi
 
 		modlist+=( "${mymod/#${modules_srcdir}\//}" )
@@ -1931,6 +1943,10 @@ append_modules() {
 
 	cp -ax --parents --target-directory "${modules_dstdir}" modules* 2>/dev/null \
 		|| gen_die "Failed to copy '${modules_srcdir}/modules*' to '${modules_dstdir}'!"
+
+	pushd "${modules_dstdir}" &>/dev/null || gen_die "Failed to chdir to '${modules_dstdir}'!"
+	find_and_unpack gz xz zstd
+	popd &>/dev/null || gen_die "Failed to chdir!"
 
 	print_info 2 "$(get_indent 2)modules: Updating modules.dep ..."
 	local depmod_cmd=( depmod -a -b "${TDIR}" ${KV} )

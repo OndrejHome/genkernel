@@ -1,4 +1,5 @@
 /genkernel.8
 /genkernel-*.tar.bz2
+/genkernel-*.tar.xz
 /ChangeLog
 /arch/*/generated-config

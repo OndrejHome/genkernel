@@ -28,7 +28,7 @@ Rolling a release:
     scp genkernel-${PV}.tar.xz ${USER}@dev.gentoo.org:/space/distfiles-local/
 - copy to portage's DISTDIR so you can bump the ebuild
   before the tarball hits distfile mirrors
-  - cp genkernel-${PV}.tar.xz /usr/portage/distfiles/
+  - cp genkernel-${PV}.tar.xz /var/cache/distfiles/
 - Bump the ebuild
 - Propagate ebuild changes to the live ebuild
     diff genkernel-${OLD_PV}.ebuild genkernel-${NEW_PV}.ebuild | patch genkernel-9999.ebuild
@@ -42,3 +42,9 @@ Rolling a release:
     git shortlog ${PREV_TAG}..v${PV} | xsel
 
   to generate the mail body.
+
+Changes:
+Changelogs prior to 2012 are available in Changelog.old [1], removed from
+regular distribution in commit 4ec9886457a58330843f5c46a38e73fda9957410.
+
+[1] https://gitweb.gentoo.org/proj/genkernel.git/tree/ChangeLog.old?id=71507545eec3031ade9b4f9a314c53216f2c97f2
