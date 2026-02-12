@@ -11,6 +11,7 @@ src_configure() {
 	local myopts=(
 		--enable-shared
 		--enable-static
+		--disable-werror
 	)
 
 	gkconf "${myopts[@]}"
