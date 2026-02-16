@@ -33,7 +33,8 @@ FINAL_DEPS = genkernel.conf \
 	gen_worker.sh \
 	path_expander.py
 
-SOFTWARE = BCACHE_TOOLS \
+SOFTWARE = B2\ 
+	BCACHE_TOOLS \
 	BOOST \
 	BTRFS_PROGS \
 	BUSYBOX \
