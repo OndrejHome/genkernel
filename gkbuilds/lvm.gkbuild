@@ -54,7 +54,7 @@ src_install() {
 	"${STRIP}" --strip-all "${D}"/usr/sbin/lvm \
 		|| die "Failed to strip '${D}/usr/sbin/lvm'!"
 
-	cp -a tools/dmsetup.static "${D}"/usr/sbin/dmsetup \
+	cp -a libdm/dm-tools/dmsetup.static "${D}"/usr/sbin/dmsetup \
 		|| die "Failed to copy '${S}/tools/dmsetup.static' to '${D}/usr/sbin/dmsetup'!"
 
 	"${STRIP}" --strip-all "${D}"/usr/sbin/dmsetup \
