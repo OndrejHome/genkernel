@@ -4,7 +4,7 @@
 src_prepare() {
 	default
 
-	local defs='-DNO_DLM -DNO_COROSYNC'
+	local defs='-DNO_DLM -DNO_COROSYNC -DNO_LIBUDEV'
 	sed -i \
 		-e "/^CFLAGS = /s:^CFLAGS = \(.*\)$:CFLAGS = ${CFLAGS} ${defs}:" \
 		-e "/^CXFLAGS = /s:^CXFLAGS = \(.*\)$:CXFLAGS = ${CFLAGS} ${defs}:" \
@@ -16,7 +16,10 @@ src_prepare() {
 }
 
 src_compile() {
-	gkmake V=1 mdadm mdmon
+	# bug 907082
+	append-cppflags -D_LARGEFILE64_SOURCE
+
+	CXFLAGS="-DNO_LIBUDEV" gkmake V=1 mdadm mdmon
 }
 
 src_install() {
